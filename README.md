@@ -1,6 +1,6 @@
 [![Molecule](https://github.com/iamenr0s/ansible_role_pkg_management/actions/workflows/molecule.yml/badge.svg)](https://github.com/iamenr0s/ansible_role_pkg_management/actions/workflows/molecule.yml) [![Release](https://github.com/iamenr0s/ansible_role_pkg_management/actions/workflows/release.yml/badge.svg)](https://github.com/iamenr0s/ansible_role_pkg_management/actions/workflows/release.yml) ![Ansible Role](https://img.shields.io/ansible/role/d/iamenr0s/ansible_role_upgrade) [![CodeFactor](https://www.codefactor.io/repository/github/iamenr0s/ansible_role_pkg_management/badge)](https://www.codefactor.io/repository/github/iamenr0s/ansible_role_pkg_management)
 
-# Ansible Role: Package Management (Debian/Ubuntu, Rocky/Alma/Fedora)
+# Ansible Role: Package Management
 
 This role manages packages across common Linux distributions, supporting Debian/Ubuntu and RHEL-family systems (Rocky Linux, AlmaLinux, Fedora). It provides idempotent tasks for updating package caches, installing and removing packages, and performing upgrades using the native package managers (`apt`, `dnf`, `yum`) behind a consistent interface.
 
