@@ -38,7 +38,7 @@ Basic usage:
   become: true
 
   roles:
-    - role: iamenr0s.ansible-role-pkg-management
+    - role: iamenr0s.ansible_role_pkg_management
       vars:
         pkg_update_cache: true
         pkg_install:
@@ -54,7 +54,7 @@ Upgrade all packages:
   become: true
 
   roles:
-    - role: iamenr0s.ansible-role-pkg-management
+    - role: iamenr0s.ansible_role_pkg_management
       vars:
         pkg_upgrade: true
         pkg_upgrade_debian_type: dist
@@ -68,7 +68,7 @@ Remove packages:
   become: true
 
   roles:
-    - role: iamenr0s.ansible-role-pkg-management
+    - role: iamenr0s.ansible_role_pkg_management
       vars:
         pkg_remove:
           - telnet
@@ -85,7 +85,7 @@ MIT
 ## Author Information
 
 Author: iamenr0s
-Galaxy: `iamenr0s.ansible-role-pkg-management`
+Galaxy: `iamenr0s.ansible_role_pkg_management`
 
 ## Contributing
 
