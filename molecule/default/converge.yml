@@ -1,0 +1,8 @@
+---
+
+- name: Converge
+  hosts: all
+  gather_facts: true
+
+  roles:
+    - role: iamenr0s.ansible_role_myrole

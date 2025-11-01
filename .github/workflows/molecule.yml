@@ -1,0 +1,86 @@
+---
+
+name: Molecule
+'on':  # yamllint disable-line rule:truthy
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+    paths-ignore:
+      - '**/*.md'
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v5
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.9'
+
+      - name: Install test dependencies.
+        run: pip3 install yamllint
+
+      - name: Lint code.
+        run: |
+          yamllint .
+
+  molecule:
+    name: Molecule
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro:
+          - almalinux8
+          - almalinux9
+          - almalinux10
+          # - debian10
+          - debian11
+          - debian12
+          - fedora40
+          - fedora41
+          - fedora42
+          - rockylinux8
+          - rockylinux9
+          - rockylinux10
+          - ubuntu2204
+          - ubuntu2404
+
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v5
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.9'
+
+      - name: Install test dependencies.
+        run: |
+          pip3 install \
+            ansible \
+            molecule \
+            "molecule-plugins[docker]" \
+            docker \
+            cryptography
+
+      - name: Create vault_password
+        run: |
+          echo ${{ secrets.ANSIBLE_VAULT_PASSWORD }} > ~/.vault-password
+
+      - name: Run Molecule tests.
+        run: molecule -vvv test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}
+          ANSIBLE_VAULT_PASSWORD_FILE: ~/.vault-password
+
+      - name: Remove vault_password
+        if: always()
+        run: |
+          rm -f ~/.vault-password
