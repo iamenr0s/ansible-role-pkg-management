@@ -1,8 +1,8 @@
 ---
 galaxy_info:
-  role_name: ansible_role_template
+  role_name: ansible_role_pkg_management
   author: "iamenr0s"
-  description: "A comprehensive Ansible role for ..."
+  description: "Cross-distro package management for Debian/Ubuntu and RHEL-family (Rocky/Alma/Fedora)."
   license: MIT
   min_ansible_version: "2.9"
   platforms:
@@ -27,6 +27,16 @@ galaxy_info:
         - "focal"
         - "jammy"
   galaxy_tags:
+    - packages
+    - apt
+    - yum
+    - dnf
+    - debian
+    - ubuntu
+    - rhel
+    - rocky
+    - almalinux
+    - fedora
 
 dependencies: []
 collections: []

@@ -1,4 +1,70 @@
 ---
 
-# Role - Main Tasks
-# This role implements ...
+## Manage packages across Debian/Ubuntu and RHEL-family (Rocky/Alma/Fedora)
+
+- name: Update package cache (Debian/Ubuntu)
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ pkg_cache_valid_time }}"
+  when:
+    - pkg_update_cache
+    - ansible_pkg_mgr == 'apt'
+
+- name: Update package cache (RHEL/Fedora with dnf)
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+  when:
+    - pkg_update_cache
+    - ansible_pkg_mgr == 'dnf'
+
+- name: Update package cache (RHEL with yum)
+  become: true
+  ansible.builtin.yum:
+    update_cache: true
+  when:
+    - pkg_update_cache
+    - ansible_pkg_mgr == 'yum'
+
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name: "{{ pkg_install }}"
+    state: "{{ pkg_install_state }}"
+  when:
+    - pkg_install | length > 0
+
+- name: Remove packages
+  become: true
+  ansible.builtin.package:
+    name: "{{ pkg_remove }}"
+    state: absent
+  when:
+    - pkg_remove | length > 0
+
+- name: Upgrade all packages (Debian/Ubuntu)
+  become: true
+  ansible.builtin.apt:
+    upgrade: "{{ pkg_upgrade_debian_type }}"
+  when:
+    - pkg_upgrade
+    - ansible_pkg_mgr == 'apt'
+
+- name: Upgrade all packages (RHEL/Fedora with dnf)
+  become: true
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  when:
+    - pkg_upgrade
+    - ansible_pkg_mgr == 'dnf'
+
+- name: Upgrade all packages (RHEL with yum)
+  become: true
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+  when:
+    - pkg_upgrade
+    - ansible_pkg_mgr == 'yum'

@@ -4,5 +4,11 @@
   hosts: all
   gather_facts: true
 
+  vars:
+    pkg_update_cache: true
+    pkg_install:
+      - curl
+    pkg_upgrade: false
+
   roles:
-    - role: iamenr0s.ansible_role_myrole
+    - role: iamenr0s.ansible_role_pkg_management
