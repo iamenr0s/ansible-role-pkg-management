@@ -1,4 +1,4 @@
-[![Molecule](https://github.com/iamenr0s/ansible_role_pkg_management/actions/workflows/molecule.yml/badge.svg)](https://github.com/iamenr0s/ansible_role_pkg_management/actions/workflows/molecule.yml) [![Release](https://github.com/iamenr0s/ansible_role_pkg_management/actions/workflows/release.yml/badge.svg)](https://github.com/iamenr0s/ansible_role_pkg_management/actions/workflows/release.yml) ![Ansible Role](https://img.shields.io/ansible/role/d/iamenr0s/ansible_role_upgrade) [![CodeFactor](https://www.codefactor.io/repository/github/iamenr0s/ansible_role_pkg_management/badge)](https://www.codefactor.io/repository/github/iamenr0s/ansible_role_pkg_management)
+[![Molecule](https://github.com/iamenr0s/ansible-role-pkg-management/actions/workflows/molecule.yml/badge.svg)](https://github.com/iamenr0s/ansible-role-pkg-management/actions/workflows/molecule.yml) [![Release](https://github.com/iamenr0s/ansible-role-pkg-management/actions/workflows/release.yml/badge.svg)](https://github.com/iamenr0s/ansible-role-pkg-management/actions/workflows/release.yml) ![Ansible Role](https://img.shields.io/ansible/role/d/iamenr0s/ansible_role_upgrade) [![CodeFactor](https://www.codefactor.io/repository/github/iamenr0s/ansible-role-pkg-management/badge)](https://www.codefactor.io/repository/github/iamenr0s/ansible-role-pkg-management)
 
 # Ansible Role: Package Management
 
@@ -38,7 +38,7 @@ Basic usage:
   become: true
 
   roles:
-    - role: iamenr0s.ansible_role_pkg_management
+    - role: iamenr0s.ansible-role-pkg-management
       vars:
         pkg_update_cache: true
         pkg_install:
@@ -54,7 +54,7 @@ Upgrade all packages:
   become: true
 
   roles:
-    - role: iamenr0s.ansible_role_pkg_management
+    - role: iamenr0s.ansible-role-pkg-management
       vars:
         pkg_upgrade: true
         pkg_upgrade_debian_type: dist
@@ -68,7 +68,7 @@ Remove packages:
   become: true
 
   roles:
-    - role: iamenr0s.ansible_role_pkg_management
+    - role: iamenr0s.ansible-role-pkg-management
       vars:
         pkg_remove:
           - telnet
@@ -85,7 +85,7 @@ MIT
 ## Author Information
 
 Author: iamenr0s
-Galaxy: `iamenr0s.ansible_role_pkg_management`
+Galaxy: `iamenr0s.ansible-role-pkg-management`
 
 ## Contributing
 
