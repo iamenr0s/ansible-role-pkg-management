@@ -7,7 +7,7 @@
   vars:
     pkg_update_cache: true
     pkg_install:
-      - curl
+      - wget
     pkg_upgrade: false
 
   roles:
