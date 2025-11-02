@@ -17,15 +17,7 @@
     update_cache: true
   when:
     - pkg_update_cache
-    - ansible_pkg_mgr == 'dnf'
-
-- name: Update package cache (RHEL with yum)
-  become: true
-  ansible.builtin.yum:
-    update_cache: true
-  when:
-    - pkg_update_cache
-    - ansible_pkg_mgr == 'yum'
+    - ansible_pkg_mgr in ['dnf', 'yum']
 
 - name: Install packages
   become: true
@@ -51,20 +43,11 @@
     - pkg_upgrade
     - ansible_pkg_mgr == 'apt'
 
-- name: Upgrade all packages (RHEL/Fedora with dnf)
+- name: Upgrade all packages (RHEL/Fedora with dnf) # noqa: package-latest
   become: true
   ansible.builtin.dnf:
     name: "*"
     state: latest
   when:
     - pkg_upgrade
-    - ansible_pkg_mgr == 'dnf'
-
-- name: Upgrade all packages (RHEL with yum)
-  become: true
-  ansible.builtin.yum:
-    name: "*"
-    state: latest
-  when:
-    - pkg_upgrade
-    - ansible_pkg_mgr == 'yum'
+    - ansible_pkg_mgr in ['dnf', 'yum']
