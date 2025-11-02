@@ -1,0 +1,6 @@
+molecule
+molecule-plugins[podman]
+paramiko
+ansible-lint
+ansible
+cryptography

@@ -1,0 +1,21 @@
+---
+
+- name: Prepare
+  hosts: all
+  gather_facts: true
+  become: false
+
+  tasks:
+    - name: Ensure /tmp exists
+      ansible.builtin.file:
+        path: /tmp
+        state: directory
+        mode: '0777'
+
+    - name: Verify Python 3 is available
+      ansible.builtin.assert:
+        that:
+          - ansible_python_version is defined
+          - ansible_python_version is version('3.0', '>=')
+        fail_msg: "Python 3 is required but not available"
+        success_msg: "Python {{ ansible_python_version }} is available"

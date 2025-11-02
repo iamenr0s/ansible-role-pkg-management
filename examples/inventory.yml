@@ -1,0 +1,95 @@
+---
+# Example Inventory for SSH Hardening Role
+
+all:
+  children:
+    # Basic servers with standard SSH hardening
+    basic_servers:
+      hosts:
+        web-01:
+          ansible_host: 192.168.1.10
+        web-02:
+          ansible_host: 192.168.1.11
+        db-01:
+          ansible_host: 192.168.1.20
+    
+    # Production servers with advanced security
+    production_servers:
+      hosts:
+        prod-web-01:
+          ansible_host: 10.0.1.10
+        prod-web-02:
+          ansible_host: 10.0.1.11
+        prod-db-01:
+          ansible_host: 10.0.1.20
+        prod-app-01:
+          ansible_host: 10.0.1.30
+      vars:
+        # Production-specific SSH settings
+        ssh_port: 2222
+        ssh_max_auth_tries: 2
+        ssh_allow_groups:
+          - production-users
+    
+    # High security servers (DMZ, critical systems)
+    secure_servers:
+      hosts:
+        dmz-web-01:
+          ansible_host: 203.0.113.10
+        critical-db-01:
+          ansible_host: 10.0.2.10
+        security-server-01:
+          ansible_host: 10.0.2.20
+      vars:
+        # High security SSH settings
+        ssh_port: 2222
+        ssh_max_auth_tries: 1
+        ssh_max_sessions: 1
+        ssh_allow_users:
+          - admin
+          - security-officer
+    
+    # Development servers (more permissive)
+    dev_servers:
+      hosts:
+        dev-web-01:
+          ansible_host: 192.168.100.10
+        dev-db-01:
+          ansible_host: 192.168.100.20
+        test-server-01:
+          ansible_host: 192.168.100.30
+      vars:
+        # Development-friendly SSH settings
+        ssh_x11_forwarding: "yes"
+        ssh_allow_tcp_forwarding: "yes"
+        ssh_max_auth_tries: 5
+        ssh_allow_groups:
+          - developers
+          - testers
+    
+    # Compliance servers (CIS/NIST requirements)
+    compliance_servers:
+      hosts:
+        compliance-web-01:
+          ansible_host: 10.0.3.10
+        audit-server-01:
+          ansible_host: 10.0.3.20
+        finance-db-01:
+          ansible_host: 10.0.3.30
+      vars:
+        # Compliance-specific settings
+        ssh_log_level: VERBOSE
+        ssh_banner_enabled: true
+        ssh_authentication_methods:
+          - publickey
+
+# Global variables for all hosts
+  vars:
+    # Common SSH settings
+    ansible_user: ansible
+    ansible_ssh_private_key_file: ~/.ssh/ansible_key
+    
+    # Common security baseline
+    ssh_permit_root_login: "no"
+    ssh_password_authentication: "no"
+    ssh_pubkey_authentication: "yes"

@@ -1,0 +1,14 @@
+---
+
+# Package management defaults
+pkg_update_cache: true
+pkg_cache_valid_time: 3600
+
+pkg_install: []
+pkg_install_state: present
+
+pkg_remove: []
+
+pkg_upgrade: false
+# Options: safe, yes, dist, full (uses apt module semantics)
+pkg_upgrade_debian_type: dist

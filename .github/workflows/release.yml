@@ -1,0 +1,30 @@
+---
+
+name: Release
+'on':  # yamllint disable-line rule:truthy
+  workflow_run:
+    workflows: ['Molecule']
+    types:
+      - completed
+  push:
+    tags:
+      - '*'
+    paths-ignore:
+      - '**/*.md'
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: 'Checkout git repo'
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: 'Release on galaxy'
+        uses: ansible-actions/ansible-galaxy-action@v1.2.0
+        with:
+          galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
+          galaxy_api: 'https://galaxy.ansible.com/api/'

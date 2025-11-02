@@ -1,0 +1,17 @@
+---
+
+# Ansible Requirements for SSH Hardening Role
+# Install with: ansible-galaxy install -r requirements.yml
+# Collections
+collections:
+  - name: ansible.posix
+    version: ">=1.3.0"
+  - name: community.general
+    version: ">=4.0.0"
+
+# Optional roles for enhanced security (uncomment if needed)
+# roles:
+#   - name: geerlingguy.security
+#     version: ">=2.0.0"
+#   - name: dev-sec.ssh-hardening
+#     version: ">=10.0.0"

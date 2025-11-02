@@ -1,0 +1,40 @@
+# OS-specific junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor/IDE
+.idea/
+.vscode/
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+*.temp
+*~
+*.bak
+*.old
+tmp/
+temp/
+
+# Python/Molecule artifacts
+__pycache__/
+*.pyc
+*.pyo
+.cache/
+.molecule/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Ansible artifacts
+*.retry
+*.log
+
+# Exclude Ansible directory
+.ansible/
+
+# Build outputs (if any)
+dist/
+build/

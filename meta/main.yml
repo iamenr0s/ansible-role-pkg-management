@@ -1,0 +1,42 @@
+---
+galaxy_info:
+  role_name: ansible_role_pkg_management
+  author: "iamenr0s"
+  description: "Cross-distro package management for Debian/Ubuntu and RHEL-family (Rocky/Alma/Fedora)."
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: "Debian"
+      versions:
+        - "bullseye"
+        - "bookworm"
+    - name: "EL"
+      versions:
+        - "8"
+        - "9"
+    - name: "Fedora"
+      versions:
+        - "38"
+        - "39"
+    - name: "Rocky"
+      versions:
+        - "8.0"
+        - "9.0"
+    - name: "Ubuntu"
+      versions:
+        - "focal"
+        - "jammy"
+  galaxy_tags:
+    - packages
+    - apt
+    - yum
+    - dnf
+    - debian
+    - ubuntu
+    - rhel
+    - rocky
+    - almalinux
+    - fedora
+
+dependencies: []
+collections: []
