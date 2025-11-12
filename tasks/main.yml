@@ -2,6 +2,53 @@
 
 ## Manage packages across Debian/Ubuntu and RHEL-family (Rocky/Alma/Fedora)
 
+# Manage repositories
+
+- name: Ensure APT keyrings directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+  when:
+    - ansible_pkg_mgr == 'apt'
+    - pkg_apt_keys | length > 0
+
+- name: Fetch APT repository keyrings
+  ansible.builtin.get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+    mode: '0644'
+  loop: "{{ pkg_apt_keys }}"
+  when:
+    - ansible_pkg_mgr == 'apt'
+    - pkg_apt_keys | length > 0
+
+- name: Add APT repositories
+  ansible.builtin.apt_repository:
+    repo: "{{ item.repo }}"
+    filename: "{{ item.filename | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+    codename: "{{ item.codename | default(omit) }}"
+    update_cache: "{{ item.update_cache | default(true) }}"
+  loop: "{{ pkg_apt_repositories }}"
+  when:
+    - ansible_pkg_mgr == 'apt'
+    - pkg_apt_repositories | length > 0
+
+- name: Add YUM/DNF repositories
+  ansible.builtin.yum_repository:
+    name: "{{ item.name }}"
+    description: "{{ item.description | default(omit) }}"
+    baseurl: "{{ item.baseurl }}"
+    enabled: "{{ item.enabled | default(true) }}"
+    gpgcheck: "{{ item.gpgcheck | default(true) }}"
+    gpgkey: "{{ item.gpgkey | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ pkg_yum_repositories }}"
+  when:
+    - ansible_pkg_mgr in ['dnf', 'yum']
+    - pkg_yum_repositories | length > 0
+
 - name: Update package cache (Debian/Ubuntu)
   ansible.builtin.apt:
     update_cache: true

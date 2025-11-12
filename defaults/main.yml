@@ -12,3 +12,19 @@ pkg_remove: []
 pkg_upgrade: false
 # Options: safe, yes, dist, full (uses apt module semantics)
 pkg_upgrade_debian_type: dist
+
+# Repository management defaults
+# APT keyrings to fetch and store (Debian/Ubuntu)
+# Example item:
+# - { url: "https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key", dest: "/etc/apt/keyrings/kubernetes-apt-keyring.gpg" }
+pkg_apt_keys: []
+
+# APT repositories to add via apt_repository
+# Example item:
+# - { repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /", filename: "kubernetes.list", state: "present", update_cache: true }
+pkg_apt_repositories: []
+
+# YUM/DNF repositories (RHEL/Fedora)
+# Example item:
+# - { name: "kubernetes", description: "Kubernetes", baseurl: "https://pkgs.k8s.io/core:/stable:/v1.30/rpm/", enabled: true, gpgcheck: true, gpgkey: "https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key", state: "present" }
+pkg_yum_repositories: []
