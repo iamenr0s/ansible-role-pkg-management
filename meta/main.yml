@@ -10,22 +10,28 @@ galaxy_info:
       versions:
         - "bullseye"
         - "bookworm"
+        - "trixie"
     - name: "EL"
       versions:
         - "8"
         - "9"
+        - "10"
     - name: "Fedora"
       versions:
-        - "38"
         - "39"
+        - "40"
+        - "41"
+        - "42"
     - name: "Rocky"
       versions:
         - "8.0"
         - "9.0"
+        - "10.0"
     - name: "Ubuntu"
       versions:
         - "focal"
         - "jammy"
+        - "kinetic"
   galaxy_tags:
     - packages
     - apt
