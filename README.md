@@ -32,6 +32,7 @@ Repository management:
 - `pkg_apt_keys` (list, default: `[]`): APT keyrings to fetch. Each item supports `url`, `dest`.
 - `pkg_apt_repositories` (list, default: `[]`): APT repositories to add. Each item supports `repo`, optional `filename`, `codename`, `state`, `update_cache`.
 - `pkg_yum_repositories` (list, default: `[]`): YUM/DNF repositories to add. Each item supports `name`, `description`, `baseurl`, optional `enabled`, `gpgcheck`, `gpgkey`, `state`.
+ - `pkg_disable_excludes` (str|null, default: `null`): For YUM/DNF operations, pass `disable_excludes` (values: `all`, `main`, or a repo ID). When `null`, it is omitted.
 
 ## Example Playbook
 
@@ -138,6 +139,8 @@ RHEL/Fedora example (v1.30):
             gpgcheck: true
             gpgkey: https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key
             state: present
+        # Ignore repo-level excludes during installs/upgrades when needed
+        pkg_disable_excludes: all
         pkg_install:
           - kubelet
           - kubeadm

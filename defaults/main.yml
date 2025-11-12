@@ -28,3 +28,8 @@ pkg_apt_repositories: []
 # Example item:
 # - { name: "kubernetes", description: "Kubernetes", baseurl: "https://pkgs.k8s.io/core:/stable:/v1.30/rpm/", enabled: true, gpgcheck: true, gpgkey: "https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key", state: "present" }
 pkg_yum_repositories: []
+
+# RPM (YUM/DNF) operation controls
+# Disable excludes during yum/dnf operations. Accepts 'all', 'main', or a repo ID.
+# When unset, the parameter is omitted.
+pkg_disable_excludes: null

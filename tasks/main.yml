@@ -44,6 +44,7 @@
     gpgcheck: "{{ item.gpgcheck | default(true) }}"
     gpgkey: "{{ item.gpgkey | default(omit) }}"
     state: "{{ item.state | default('present') }}"
+    exclude: "{{ item.exclude | default(omit) }}"
   loop: "{{ pkg_yum_repositories }}"
   when:
     - ansible_pkg_mgr in ['dnf', 'yum']
@@ -64,12 +65,31 @@
     - pkg_update_cache
     - ansible_pkg_mgr in ['dnf', 'yum']
 
-- name: Install packages
+- name: Install packages (Debian/Ubuntu)
   ansible.builtin.package:
     name: "{{ pkg_install }}"
     state: "{{ pkg_install_state }}"
   when:
     - pkg_install | length > 0
+    - ansible_pkg_mgr == 'apt'
+
+- name: Install packages (RHEL/Fedora with dnf)
+  ansible.builtin.dnf:
+    name: "{{ pkg_install }}"
+    state: "{{ pkg_install_state }}"
+    disable_excludes: "{{ pkg_disable_excludes | default(omit) }}"
+  when:
+    - pkg_install | length > 0
+    - ansible_pkg_mgr == 'dnf'
+
+- name: Install packages (RHEL/Fedora with yum)
+  ansible.builtin.yum:
+    name: "{{ pkg_install }}"
+    state: "{{ pkg_install_state }}"
+    disable_excludes: "{{ pkg_disable_excludes | default(omit) }}"
+  when:
+    - pkg_install | length > 0
+    - ansible_pkg_mgr == 'yum'
 
 - name: Remove packages
   ansible.builtin.package:
@@ -89,6 +109,16 @@
   ansible.builtin.dnf:
     name: "*"
     state: latest
+    disable_excludes: "{{ pkg_disable_excludes | default(omit) }}"
   when:
     - pkg_upgrade
-    - ansible_pkg_mgr in ['dnf', 'yum']
+    - ansible_pkg_mgr == 'dnf'
+
+- name: Upgrade all packages (RHEL with yum) # noqa: package-latest
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+    disable_excludes: "{{ pkg_disable_excludes | default(omit) }}"
+  when:
+    - pkg_upgrade
+    - ansible_pkg_mgr == 'yum'
