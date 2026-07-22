@@ -10,7 +10,7 @@
     state: directory
     mode: '0755'
   when:
-    - ansible_pkg_mgr == 'apt'
+    - ansible_facts['pkg_mgr'] == 'apt'
     - pkg_apt_keys | length > 0
 
 - name: Fetch APT repository keyrings
@@ -20,7 +20,7 @@
     mode: '0644'
   loop: "{{ pkg_apt_keys }}"
   when:
-    - ansible_pkg_mgr == 'apt'
+    - ansible_facts['pkg_mgr'] == 'apt'
     - pkg_apt_keys | length > 0
 
 - name: Add APT repositories
@@ -32,7 +32,7 @@
     update_cache: "{{ item.update_cache | default(true) }}"
   loop: "{{ pkg_apt_repositories }}"
   when:
-    - ansible_pkg_mgr == 'apt'
+    - ansible_facts['pkg_mgr'] == 'apt'
     - pkg_apt_repositories | length > 0
 
 - name: Add YUM/DNF repositories
@@ -47,7 +47,7 @@
     exclude: "{{ item.exclude | default(omit) }}"
   loop: "{{ pkg_yum_repositories }}"
   when:
-    - ansible_pkg_mgr in ['dnf', 'yum']
+    - ansible_facts['pkg_mgr'] in ['dnf', 'yum']
     - pkg_yum_repositories | length > 0
 
 - name: Update package cache (Debian/Ubuntu)
@@ -56,14 +56,14 @@
     cache_valid_time: "{{ pkg_cache_valid_time }}"
   when:
     - pkg_update_cache
-    - ansible_pkg_mgr == 'apt'
+    - ansible_facts['pkg_mgr'] == 'apt'
 
 - name: Update package cache (RHEL/Fedora with dnf)
   ansible.builtin.dnf:
     update_cache: true
   when:
     - pkg_update_cache
-    - ansible_pkg_mgr in ['dnf', 'yum']
+    - ansible_facts['pkg_mgr'] in ['dnf', 'yum']
 
 - name: Install packages (Debian/Ubuntu)
   ansible.builtin.package:
@@ -71,7 +71,7 @@
     state: "{{ pkg_install_state }}"
   when:
     - pkg_install | length > 0
-    - ansible_pkg_mgr == 'apt'
+    - ansible_facts['pkg_mgr'] == 'apt'
 
 - name: Install packages (RHEL/Fedora with dnf)
   ansible.builtin.dnf:
@@ -80,7 +80,7 @@
     disable_excludes: "{{ pkg_disable_excludes | default(omit) }}"
   when:
     - pkg_install | length > 0
-    - ansible_pkg_mgr == 'dnf'
+    - ansible_facts['pkg_mgr'] == 'dnf'
 
 - name: Install packages (RHEL/Fedora with yum)
   ansible.builtin.yum:
@@ -89,7 +89,7 @@
     disable_excludes: "{{ pkg_disable_excludes | default(omit) }}"
   when:
     - pkg_install | length > 0
-    - ansible_pkg_mgr == 'yum'
+    - ansible_facts['pkg_mgr'] == 'yum'
 
 - name: Remove packages
   ansible.builtin.package:
@@ -103,7 +103,7 @@
     upgrade: "{{ pkg_upgrade_debian_type }}"
   when:
     - pkg_upgrade
-    - ansible_pkg_mgr == 'apt'
+    - ansible_facts['pkg_mgr'] == 'apt'
 
 - name: Upgrade all packages (RHEL/Fedora with dnf) # noqa: package-latest
   ansible.builtin.dnf:
@@ -112,7 +112,7 @@
     disable_excludes: "{{ pkg_disable_excludes | default(omit) }}"
   when:
     - pkg_upgrade
-    - ansible_pkg_mgr == 'dnf'
+    - ansible_facts['pkg_mgr'] == 'dnf'
 
 - name: Upgrade all packages (RHEL with yum) # noqa: package-latest
   ansible.builtin.yum:
@@ -121,4 +121,4 @@
     disable_excludes: "{{ pkg_disable_excludes | default(omit) }}"
   when:
     - pkg_upgrade
-    - ansible_pkg_mgr == 'yum'
+    - ansible_facts['pkg_mgr'] == 'yum'
