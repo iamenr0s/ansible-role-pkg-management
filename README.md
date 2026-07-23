@@ -180,4 +180,5 @@ This project is licensed under the [MIT License](LICENSE).
 ## Author Information
 
 Author: iamenr0s
+
 Galaxy: `iamenr0s.ansible_role_pkg_management`
