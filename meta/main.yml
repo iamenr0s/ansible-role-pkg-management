@@ -8,7 +8,6 @@ galaxy_info:
   platforms:
     - name: "Debian"
       versions:
-        - "bullseye"
         - "bookworm"
         - "trixie"
     - name: "EL"
@@ -18,20 +17,15 @@ galaxy_info:
         - "10"
     - name: "Fedora"
       versions:
-        - "39"
-        - "40"
-        - "41"
         - "42"
-    - name: "Rocky"
-      versions:
-        - "8.0"
-        - "9.0"
-        - "10.0"
+        - "43"
+        - "44"
+    # Rocky Linux is covered under EL support; remove explicit entry to satisfy
+    # ansible-lint schema expectations for platforms.
     - name: "Ubuntu"
       versions:
-        - "focal"
         - "jammy"
-        - "kinetic"
+        - "noble"
   galaxy_tags:
     - packages
     - apt

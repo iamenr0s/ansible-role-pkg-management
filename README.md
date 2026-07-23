@@ -1,8 +1,17 @@
-[![Molecule](https://github.com/iamenr0s/ansible-role-pkg-management/actions/workflows/molecule.yml/badge.svg)](https://github.com/iamenr0s/ansible-role-pkg-management/actions/workflows/molecule.yml) [![Release](https://github.com/iamenr0s/ansible-role-pkg-management/actions/workflows/release.yml/badge.svg)](https://github.com/iamenr0s/ansible-role-pkg-management/actions/workflows/release.yml) ![Ansible Role](https://img.shields.io/ansible/role/d/iamenr0s/ansible_role_pkg_management) [![CodeFactor](https://www.codefactor.io/repository/github/iamenr0s/ansible-role-pkg-management/badge)](https://www.codefactor.io/repository/github/iamenr0s/ansible-role-pkg-management)
+[![Molecule](https://github.com/iamenr0s/ansible-role-pkg-management/actions/workflows/molecule.yml/badge.svg)](https://github.com/iamenr0s/ansible-role-pkg-management/actions/workflows/molecule.yml) ![Ansible Role](https://img.shields.io/ansible/role/d/iamenr0s/ansible_role_pkg_management) [![CodeFactor](https://www.codefactor.io/repository/github/iamenr0s/ansible-role-pkg-management/badge)](https://www.codefactor.io/repository/github/iamenr0s/ansible-role-pkg-management)
 
 # Ansible Role: Package Management
 
 This role manages packages across common Linux distributions, supporting Debian/Ubuntu and RHEL-family systems (Rocky Linux, AlmaLinux, Fedora). It provides idempotent tasks for updating package caches, installing and removing packages, and performing upgrades using the native package managers (`apt`, `dnf`, `yum`) behind a consistent interface.
+
+## Features
+
+- Updates the package cache (`apt`, `dnf`) with configurable cache validity
+- Installs and removes packages via a distro-agnostic interface
+- Upgrades all packages (`apt`, `dnf`, `yum`)
+- Manages APT keyrings and repositories (Debian/Ubuntu)
+- Manages YUM/DNF repositories, including repo excludes (RHEL/Fedora)
+- Treats `dnf5` the same as `dnf` for newer Fedora releases
 
 ## Requirements
 
@@ -11,12 +20,12 @@ This role manages packages across common Linux distributions, supporting Debian/
 
 ## Supported Platforms
 
-- Ubuntu 20.04 (focal), 22.04 (jammy)
-- Debian 11 (bullseye), 12 (bookworm)
-- Enterprise Linux 8, 9 (RHEL-compatible)
-- Rocky Linux 8, 9
-- AlmaLinux 8, 9
-- Fedora 38, 39
+- Ubuntu 22.04 (jammy), 24.04 (noble)
+- Debian 12 (bookworm), 13 (trixie)
+- Enterprise Linux 8, 9, 10 (RHEL-compatible)
+- Rocky Linux 8, 9, 10
+- AlmaLinux 8, 9, 10
+- Fedora 42, 43, 44
 
 ## Role Variables
 
@@ -32,7 +41,7 @@ Repository management:
 - `pkg_apt_keys` (list, default: `[]`): APT keyrings to fetch. Each item supports `url`, `dest`.
 - `pkg_apt_repositories` (list, default: `[]`): APT repositories to add. Each item supports `repo`, optional `filename`, `codename`, `state`, `update_cache`.
 - `pkg_yum_repositories` (list, default: `[]`): YUM/DNF repositories to add. Each item supports `name`, `description`, `baseurl`, optional `enabled`, `gpgcheck`, `gpgkey`, `state`.
- - `pkg_disable_excludes` (str|null, default: `null`): For YUM/DNF operations, pass `disable_excludes` (values: `all`, `main`, or a repo ID). When `null`, it is omitted.
+- `pkg_disable_excludes` (str|null, default: `null`): For YUM/DNF operations, pass `disable_excludes` (values: `all`, `main`, or a repo ID). When `null`, it is omitted.
 
 ## Example Playbook
 
@@ -84,18 +93,24 @@ Remove packages:
 
 None.
 
-## License
+## CI & Release (maintainers)
 
-MIT
+A single workflow (`.github/workflows/molecule.yml`) runs lint and the full Molecule distro matrix on pushes to `main`, PRs, and `v*` tags. On `v*` tags, a `release` job publishes to Ansible Galaxy after all tests pass.
 
-## Author Information
+The Galaxy API key lives in the `galaxy` GitHub environment, which only `v*` tags may target. One-time setup:
 
-Author: iamenr0s
-Galaxy: `iamenr0s.ansible_role_pkg_management`
+```bash
+# Galaxy publishing key (environment-scoped, get it from galaxy.ansible.com/ui/token)
+gh secret set GALAXY_API_KEY --env galaxy --repo iamenr0s/ansible-role-pkg-management
 
-## Contributing
+# Code scanning notifications (Slack webhook URL; for Discord append /slack to the webhook URL)
+gh secret set SECURITY_ALERT_WEBHOOK --env galaxy --repo iamenr0s/ansible-role-pkg-management
+```
 
-Contributions are welcome! Please open an issue or PR.
+`.github/workflows/code-scanning-notify.yml` polls the code-scanning API every 6 hours and posts new or updated open alerts to that webhook (GitHub Actions cannot trigger on `code_scanning_alert` directly).
+
+To release: tag a commit `vX.Y.Z` and push the tag — CI gates the Galaxy publish.
+
  
 ## Add Kubernetes Repositories
 
@@ -146,3 +161,23 @@ RHEL/Fedora example (v1.30):
           - kubeadm
           - kubectl
 ```
+
+## Contributing
+
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for the
+local pipeline commands and pull request checklist. This project follows the
+[Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Security
+
+See [SECURITY.md](SECURITY.md) — GitHub private vulnerability reporting, no
+public issues for security bugs.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Author Information
+
+Author: iamenr0s
+Galaxy: `iamenr0s.ansible_role_pkg_management`

@@ -13,10 +13,14 @@ platforms:
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
-    cgroupns_mode: host
+    # molecule-plugins >= 26.7 dropped the cgroupns_mode key from the podman
+    # schema; pass the flag straight through instead.
+    extra_opts:
+      - --cgroupns=host
     privileged: true
     pre_build_image: true
 provisioner:
   name: ansible
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+    prepare: prepare.yml

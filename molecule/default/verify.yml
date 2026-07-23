@@ -1,0 +1,17 @@
+---
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert wget package was installed
+      ansible.builtin.assert:
+        that:
+          - "'wget' in ansible_facts.packages"
+        fail_msg: "wget package was not installed by the role"
+        success_msg: "wget package is installed"

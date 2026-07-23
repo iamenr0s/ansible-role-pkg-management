@@ -1,0 +1,35 @@
+---
+
+name: Code scanning notifications
+# code_scanning_alert is a webhook-only event and not a valid Actions
+# trigger, so poll the code-scanning API on a schedule instead.
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  security-events: read
+
+jobs:
+  notify:
+    name: Notify webhook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post new alerts to Slack/Discord webhook
+        # Untrusted alert fields go through env vars + jq, never
+        # interpolated into the shell command (script-injection safe).
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WEBHOOK_URL: ${{ secrets.SECURITY_ALERT_WEBHOOK }}
+        run: |
+          # ponytail: 6h poll window matching the cron; a delayed run can
+          # re-notify an alert once — fine for a notification channel
+          since=$(date -u -d '6 hours ago' +%Y-%m-%dT%H:%M:%SZ)
+          gh api "repos/${GITHUB_REPOSITORY}/code-scanning/alerts?state=open&per_page=100" \
+            | jq -c --arg since "$since" '.[] | select((.updated_at // .created_at) >= $since)' \
+            | while IFS= read -r alert; do
+                jq -n --argjson a "$alert" \
+                  '{text: "🚨 Code scanning alert in \(env.GITHUB_REPOSITORY): \($a.rule.description) [\($a.rule.severity)] — \($a.html_url)"}' \
+                  | curl -sf -X POST -H 'Content-Type: application/json' -d @- "$WEBHOOK_URL"
+              done

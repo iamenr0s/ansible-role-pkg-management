@@ -1,0 +1,66 @@
+---
+
+argument_specs:
+  main:
+    short_description: >-
+      Cross-distro package management for Debian/Ubuntu and RHEL-family
+      (AlmaLinux/RockyLinux/Fedora) hosts.
+    options:
+      pkg_update_cache:
+        description: Refresh the package manager cache before other operations.
+        type: bool
+        default: true
+      pkg_cache_valid_time:
+        description: Cache validity for `apt` in seconds.
+        type: int
+        default: 3600
+      pkg_install:
+        description: Packages to install.
+        type: list
+        elements: str
+        default: []
+      pkg_install_state:
+        description: State for installed packages (`present`, `latest`).
+        type: str
+        default: present
+      pkg_remove:
+        description: Packages to remove.
+        type: list
+        elements: str
+        default: []
+      pkg_upgrade:
+        description: Upgrade all packages.
+        type: bool
+        default: false
+      pkg_upgrade_debian_type:
+        description: Upgrade type for Debian/Ubuntu (`safe`, `yes`, `dist`, `full`), matching `apt` module semantics.
+        type: str
+        default: dist
+      pkg_apt_keys:
+        description: >-
+          APT keyrings to fetch and store (Debian/Ubuntu). Each item supports
+          `url` and `dest`.
+        type: list
+        elements: dict
+        default: []
+      pkg_apt_repositories:
+        description: >-
+          APT repositories to add via `apt_repository`. Each item supports
+          `repo`, and optional `filename`, `state`, `codename`, `update_cache`.
+        type: list
+        elements: dict
+        default: []
+      pkg_yum_repositories:
+        description: >-
+          YUM/DNF repositories to add via `yum_repository` (RHEL/Fedora). Each
+          item supports `name`, `baseurl`, and optional `description`,
+          `enabled`, `gpgcheck`, `gpgkey`, `state`, `exclude`.
+        type: list
+        elements: dict
+        default: []
+      pkg_disable_excludes:
+        description: >-
+          `disable_excludes` value passed to YUM/DNF install/upgrade operations
+          (`all`, `main`, or a repo ID). When unset, the parameter is omitted.
+        type: str
+        default: null

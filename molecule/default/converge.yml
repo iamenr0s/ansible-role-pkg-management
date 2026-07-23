@@ -5,10 +5,12 @@
   gather_facts: true
 
   vars:
-    pkg_update_cache: true
-    pkg_install:
-      - wget
-    pkg_upgrade: false
+    ansible_python_interpreter: /usr/bin/python3
 
   roles:
     - role: iamenr0s.ansible_role_pkg_management
+      vars:
+        pkg_update_cache: true
+        pkg_install:
+          - wget
+        pkg_upgrade: false

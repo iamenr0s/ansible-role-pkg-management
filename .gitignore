@@ -6,6 +6,7 @@ Desktop.ini
 # Editor/IDE
 .idea/
 .vscode/
+.trae
 
 # Temporary files
 *.swp
@@ -34,6 +35,11 @@ htmlcov/
 
 # Exclude Ansible directory
 .ansible/
+
+# Claude Code
+.claude/
+.remember/
+CLAUDE.md
 
 # Build outputs (if any)
 dist/
