@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Post new alerts to Slack/Discord webhook
+        if: ${{ secrets.SECURITY_ALERT_WEBHOOK != '' }}
         # Untrusted alert fields go through env vars + jq, never
         # interpolated into the shell command (script-injection safe).
         env:
