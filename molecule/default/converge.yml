@@ -12,5 +12,5 @@
       vars:
         pkg_update_cache: true
         pkg_install:
-          - wget
+          - tree
         pkg_upgrade: false

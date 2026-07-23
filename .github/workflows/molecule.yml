@@ -3,11 +3,17 @@
 name: Molecule
 'on':  # yamllint disable-line rule:truthy
   push:
+    branches:
+      - main
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
     paths-ignore:
       - '**/*.md'
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   lint:
@@ -20,7 +26,7 @@ jobs:
       - name: Set up Python 3.
         uses: actions/setup-python@v6
         with:
-          python-version: '3.9'
+          python-version: '3.12'
 
       - name: Install test dependencies.
         run: pip3 install yamllint
@@ -33,22 +39,33 @@ jobs:
     name: Molecule
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         distro:
           - almalinux8
           - almalinux9
           - almalinux10
-          # - debian10
-          - debian11
           - debian12
-          - fedora40
-          - fedora41
+          - debian13
           - fedora42
+          - fedora43
+          - fedora44
           - rockylinux8
           - rockylinux9
           - rockylinux10
           - ubuntu2204
           - ubuntu2404
+        include:
+          # EL8 legs ship managed-node Python 3.6.8, below ansible-core's
+          # floor; pin ansible-core <10 and the controller to Python 3.12
+          # (ansible-compat refuses ansible-core < 2.20 on controller
+          # Python >= 3.14).
+          - distro: almalinux8
+            ansible_pin: "ansible<10"
+            python_version: '3.12'
+          - distro: rockylinux8
+            ansible_pin: "ansible<10"
+            python_version: '3.12'
 
     steps:
       - name: Check out the codebase.
@@ -57,30 +74,34 @@ jobs:
       - name: Set up Python 3.
         uses: actions/setup-python@v6
         with:
-          python-version: '3.9'
+          python-version: ${{ matrix.python_version || '3.12' }}
 
       - name: Install test dependencies.
-        run: |
-          pip3 install \
-            ansible \
-            molecule \
-            "molecule-plugins[docker]" \
-            docker \
-            cryptography
-
-      - name: Create vault_password
-        run: |
-          echo ${{ secrets.ANSIBLE_VAULT_PASSWORD }} > ~/.vault-password
+        run: pip3 install "${{ matrix.ansible_pin || 'ansible' }}" molecule molecule-plugins[docker] docker cryptography
 
       - name: Run Molecule tests.
-        run: molecule -vvv test
+        run: molecule test
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRO: ${{ matrix.distro }}
-          ANSIBLE_VAULT_PASSWORD_FILE: ~/.vault-password
 
-      - name: Remove vault_password
-        if: always()
-        run: |
-          rm -f ~/.vault-password
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    environment: galaxy
+    needs:
+      - lint
+      - molecule
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout git repo
+        uses: actions/checkout@v5
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Release on galaxy
+        uses: ansible-actions/ansible-galaxy-action@v1.2.0
+        with:
+          galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}

@@ -9,9 +9,9 @@
       ansible.builtin.package_facts:
         manager: auto
 
-    - name: Assert wget package was installed
+    - name: Assert tree package was installed
       ansible.builtin.assert:
         that:
-          - "'wget' in ansible_facts.packages"
-        fail_msg: "wget package was not installed by the role"
-        success_msg: "wget package is installed"
+          - "'tree' in ansible_facts.packages"
+        fail_msg: "tree package was not installed by the role"
+        success_msg: "tree package is installed"
